@@ -124,16 +124,6 @@ ad5_server <- function(input, output) {
     background_msg <- "In this report we are looking at data that gives information from different
                       cities in the United States on useful employment statistics, these include average
                       income, demographics, level of education rates, and more. The main purpose of this report
-<<<<<<< HEAD
-                      is to analyze trends of level of education and its relationship to income/ how sucessful one is.
-                      It is usually assumed that college is the gateway to the middle class, but for many people,
-                      the cost of attending university is a significant restriction. This domain is worth analyzing because
-                      almost every prospective college student has to weigh in on whether the increased income is worth the time
-                      and monetary investment of getting a college education. Also, since different counties have different racial
-                      distributions, investigating whether these differences affect income levels would be critical in reducing racial
-                      inequalities across the country. Finally, determining if commute time correlates to incomes can help governments
-                      figure out whether to increase spending in infrastructure."
-=======
                       is to analyze trends of level of education and its relationship to income/how sucessful one is.
                       It is usually assumed that college is the gateway to the middle class, but for many people,
                       the cost of attending university is a significant restriction. This domain is worth analyzing because
@@ -143,7 +133,6 @@ ad5_server <- function(input, output) {
                       beliefs of sucess. In this data report we plan to demonstrate that education does correlate to sucess through
                       analyzing the United States Census Data and data on education from the counties across the nation by evaluating
                       data visulizations on our factors of sucess"
->>>>>>> kmarshall98_branch
   })
 
 
@@ -186,9 +175,6 @@ ad5_server <- function(input, output) {
   })
 
   output$question_two_msg <- renderText({
-<<<<<<< HEAD
-    q2_msg <- "This plot shows..................dfasgsadgsagsdafsd"
-=======
   q2_msg <- "The above scatter plot plots the county's data on the percent of the population with
             bachelors degrees or higher on the x-axis and the average commute time for the county's.
             The visualization defaults to display all of the counties but it can also plot specific states.
@@ -215,7 +201,6 @@ ad5_server <- function(input, output) {
             visualization though still provides valuable information. The color of each point is associated with income. The lighter
             dots are higher incomes where as the darker dots are lower incomed county's. From the data visualization there is a
             significant correlation between higher percentage of bachelors degrees with higher incomes like the previous plot."
->>>>>>> kmarshall98_branch
   })
 
   #QUESTION THREE
