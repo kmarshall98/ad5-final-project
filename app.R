@@ -91,7 +91,11 @@ ad5_ui <- navbarPage(
              ),
              mainPanel(
                titlePanel("How does race makeup coorelate with education levels?"),
-               plotOutput("question_three_plot")
+               plotOutput("question_three_plot"),
+               p("Below are the education levels for the mean county in the selected area"),
+               tableOutput("question_three_table"),
+               p("According to our data, nationally at least, a high school education at least is a near-guarantee for those counties that are almost exclusivly white, where that is nowhere near the case for those counties with less primarily-white makeups. However, interestingly enough, the counties with the highest percentage of people with bachelors degrees or higher were in those counties with closer to 75-80% white populations, possibly suggesting that those places with higher levels of higher education are cities with more cosmopolitan makeups."),
+               p("Perhaps not suprisingly, but certianly unfortunatly, those places with the highest levels of high-school dropouts are the most non-white counties, although it is important to not that high levels of high-school dropouts are to be found in predominantly white counties as well.")
              )
            )
   ),
@@ -151,6 +155,24 @@ ad5_server <- function(input, output) {
       labs(title = "Levels of Education vs. Percentage of County That is White", x = "Percentage of County that is White", y = paste("Percentage of County where Highest \nLevel of Education is", input$educ_level_q3))
     
     race_plot
+  })
+  
+  output$question_three_table <- renderTable({
+    if(input$state_q3 != "National") {
+      joined <- joined %>% 
+        filter(State == input$state_q3)
+    }
+    
+    output <- summarise(joined,
+                        mean_less_than_high = mean(per_less_than_high),
+                        mean_high_only = mean(per_high_only),
+                        mean_some_college = mean(per_some_college),
+                        mean_bachelors = mean(per_bachelors))             
+                        
+    
+    colnames(output) <- education_level_list <- c("Less than High School", "High School Only", "Some College", "Bachelors")
+    
+    output
   })
   
 }
