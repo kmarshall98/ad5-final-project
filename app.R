@@ -14,7 +14,7 @@ education_data <- read.csv("./data/education_by_county.csv")
 ad5_ui <- navbarPage("AD5 Final",
      tabPanel("Introduction"),
      tabPanel("Question One"),
-     tabPanel("Question Two"),
+     tabPanel("Education vs. Commute Times"),
      tabPanel("Question Three"),
      tabPanel("Question Four"),
      tabPanel("References")
