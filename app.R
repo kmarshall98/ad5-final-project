@@ -74,7 +74,27 @@ ad5_ui <- navbarPage(
       )
     )
   ),
-  tabPanel("Question Three"),
+  tabPanel("Race and College Access",
+           sidebarLayout(
+             sidebarPanel(
+               titlePanel("Select the State:"),
+               selectInput("state_q3", 
+                           label = "Select:", 
+                           choices = state_list,
+                           selected = "National"
+               ),
+               selectInput(inputId = "educ_level_q3", 
+                           label = "Select Level of Education", 
+                           choices = education_level_list, 
+                           selected = "per_bachelors")
+               
+             ),
+             mainPanel(
+               titlePanel("How does race makeup coorelate with education levels?"),
+               plotOutput("question_three_plot")
+             )
+           )
+  ),
   tabPanel("Question Four"),
   tabPanel("References")
 )
@@ -117,6 +137,22 @@ ad5_server <- function(input, output) {
       
     commute_plot
   })
+  
+  #QUESTION THREE
+  
+  output$question_three_plot <- renderPlot({
+    if(input$state_q3 != "National") {
+      joined <- joined %>% 
+        filter(State == input$state_q3)
+    }
+    
+    race_plot <- ggplot(data = joined) + 
+      geom_hex(mapping = aes_string(x = "White", y = education_level[[input$educ_level_q3]])) +
+      labs(title = "Levels of Education vs. Percentage of County That is White", x = "Percentage of County that is White", y = paste("Percentage of County where Highest \nLevel of Education is", input$educ_level_q3))
+    
+    race_plot
+  })
+  
 }
 
 # Shiny App
