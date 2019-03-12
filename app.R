@@ -30,8 +30,17 @@ education_level <- list("Less than High School" = "per_less_than_high", "High Sc
 # UI
 ad5_ui <- navbarPage(
   "AD5 Final",
-  tabPanel("Introduction"),
-  
+  tabPanel("Introduction", 
+           titlePanel("Analyzing Education's Impact on Success"),
+           imageOutput("cover_image"),
+           br(),
+           br(),
+           br(),
+           br(),
+           br(),
+           br(),
+           h3(em("Why does this matter?")),
+           textOutput(outputId = "intro_msg")),
   tabPanel(
     "Education and Income",
     titlePanel(""),
@@ -70,7 +79,8 @@ ad5_ui <- navbarPage(
       ),
       mainPanel(
         titlePanel("How does level of education impact commute times?"),
-        plotOutput("question_two")
+        plotOutput("question_two"),
+        textOutput(outputId = "question_two_msg")
       )
     )
   ),
@@ -81,6 +91,27 @@ ad5_ui <- navbarPage(
 
 # Server
 ad5_server <- function(input, output) {
+  #INTRODUCTION PAGE
+  output$cover_image <- renderImage({
+    return(list(src = "image/suzzallo.jpg", filetype = "image/jpeg", alt = "Suzzallo Library"))
+  }, deleteFile = FALSE)
+  
+  output$intro_msg <- renderText({
+    background_msg <- "In this report we are looking at data that gives information from different 
+                      cities in the United States on useful employment statistics, these include average 
+                      income, demographics, level of education rates, and more. The main purpose of this report 
+                      is to analyze trends of level of education and its relationship to income/ how sucessful one is.
+                      It is usually assumed that college is the gateway to the middle class, but for many people, 
+                      the cost of attending university is a significant restriction. This domain is worth analyzing because
+                      almost every prospective college student has to weigh in on whether the increased income is worth the time 
+                      and monetary investment of getting a college education. Also, since different counties have different racial
+                      distributions, investigating whether these differences affect income levels would be critical in reducing racial 
+                      inequalities across the country. Finally, determining if commute time correlates to incomes can help governments 
+                      figure out whether to increase spending in infrastructure."
+  })
+  
+  
+  
   #QUESTION ONE 
   output$question_one_plot <- renderPlot({
     if(input$state != "National") {
@@ -116,6 +147,9 @@ ad5_server <- function(input, output) {
       labs(title = "Plot of Commute times based on Education", x = "% Population with a Bachelors Degree or Higher", y = "Mean Commute Time") 
       
     commute_plot
+  })
+  output$question_two_msg <- renderText({
+    q2_msg <- "This plot shows..................dfasgsadgsagsdafsd"
   })
 }
 
