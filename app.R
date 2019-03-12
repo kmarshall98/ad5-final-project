@@ -15,11 +15,14 @@ census_county_data <- read.csv("./data/census_county_data.csv", stringsAsFactors
 joined <- inner_join(education_by_county, census_county_data, by = "FIPS.Code")
 joined <- mutate(joined, Non_White = 100 - White)
 
-# data sets
-census_data <- read.csv("./data/census_county_data.csv")
-education_data <- read.csv("./data/education_by_county.csv")
+
 joined_national <- add_row(joined, State = "National")
 state_list <- joined_national$State
+
+income_range <- range(joined$Income, na.rm = TRUE)
+
+
+
 education_level_list <- c("Less than High School", "High School Only", "Some College", "Bachelors")
 education_level <- list("Less than High School" = "per_less_than_high", "High School Only" = "per_high_only", "Some College" = "per_some_college", "Bachelors" = "per_bachelors")
 
@@ -28,6 +31,7 @@ education_level <- list("Less than High School" = "per_less_than_high", "High Sc
 ad5_ui <- navbarPage(
   "AD5 Final",
   tabPanel("Introduction"),
+  
   tabPanel(
     "Education and Income",
     titlePanel(""),
@@ -47,7 +51,29 @@ ad5_ui <- navbarPage(
       )
     )
   ),
-  tabPanel("Question Two"),
+  
+  tabPanel("Commute Times vs. Education",
+    sidebarLayout(
+      sidebarPanel(
+        titlePanel("Select the State:"),
+        selectInput("state_choice", 
+                    label = "Select:", 
+                    choices = state_list,
+                    selected = "National"
+        ),
+        sliderInput("income_slider", 
+                    label = "Income Range",
+                    min = income_range[1],
+                    max = income_range[2],
+                    value = income_range
+        )
+      ),
+      mainPanel(
+        titlePanel("How does level of education impact commute times?"),
+        plotOutput("question_two")
+      )
+    )
+  ),
   tabPanel("Question Three"),
   tabPanel("Question Four"),
   tabPanel("References")
@@ -55,6 +81,7 @@ ad5_ui <- navbarPage(
 
 # Server
 ad5_server <- function(input, output) {
+  #QUESTION ONE 
   output$question_one_plot <- renderPlot({
     if(input$state != "National") {
       joined <- joined %>% 
@@ -74,6 +101,21 @@ ad5_server <- function(input, output) {
     income_table <- joined %>% 
       select(State, County,IncomePerCap, education_level[[input$educ_level]])
     income_table
+  })
+  
+  # QUESTION TWO
+  output$question_two <- renderPlot({
+    if(input$state_choice == "National") {
+      state_choice_df <- joined
+    } else {
+      state_choice_df <- filter(joined, State == input$state_choice)  
+    }
+    state_choice_df <- filter(state_choice_df, Income > input$income_slider[1] & Income < input$income_slider[2])
+    commute_plot <- ggplot(data = state_choice_df) +
+      geom_point(mapping = aes(x = per_bachelors, y = MeanCommute, color = Income, size = TotalPop)) +
+      labs(title = "Plot of Commute times based on Education", x = "% Population with a Bachelors Degree or Higher", y = "Mean Commute Time") 
+      
+    commute_plot
   })
 }
 
