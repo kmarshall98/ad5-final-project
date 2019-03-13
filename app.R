@@ -31,51 +31,65 @@ education_level <- list("Less than High School" = "per_less_than_high", "High Sc
 # UI
 ad5_ui <- navbarPage(
   "AD5 Final",
-  tabPanel("Introduction",
-           titlePanel("Analyzing Education's Impact on Success"),
-           imageOutput("cover_image"),
-           br(),
-           br(),
-           br(),
-           br(),
-           br(),
-           br(),
-           h3(em("Why does this matter?")),
-           textOutput(outputId = "intro_msg")),
+  tabPanel(
+    "Introduction",
+    titlePanel("Analyzing Education's Impact on Success"),
+    imageOutput("cover_image"),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    h3(em("Why does this matter?")),
+    textOutput(outputId = "intro_msg")
+  ),
   tabPanel(
     "Education and Income",
     titlePanel(""),
     sidebarLayout(
       sidebarPanel(
         titlePanel("Select Data"),
-        selectInput(inputId = "educ_level", label = "Select Level of Education", choices = education_level_list, selected = "per_bachelors"),
-        selectInput(inputId = "state", label = "Select State", choices = state_list, selected = "National")
+        selectInput(
+          inputId = "educ_level",
+          label = "Select Level of Education",
+          choices = education_level_list,
+          selected = "per_bachelors"
+        ),
+        selectInput(
+          inputId = "state",
+          label = "Select State",
+          choices = state_list,
+          selected = "National"
+        )
       ),
       mainPanel(
         titlePanel("Do Counties with a Higher Education Level Correlate to Having Higher Income per Capita?"),
-        p("hello"),
-        p("hm"),
-          plotOutput("question_one_plot"),
-          tableOutput("question_one_table")
-
+        plotOutput("question_one_plot"),
+        textOutput(outputId = "question_one_msg"),
+        p(""),
+        p("There is a strong positive correlation of 0.71 between the percent of the population with a bachelor’s degree and the income per capita for counties within the United States. In contrast, there is a strong negative correlation of -0.67 between percent of population with less than a high school education and income per capita. From these observations, it can be inferred that more educated counties tend to have a higher income per capita than the less educated counties and vice versa. "),
+        p("However, despite the strong correlation, there are several outliers that have to be mentioned. In the graph of “% Population with Bachelors” against “Income Per Capita”, there is a county where only 14.20% of the population has a bachelors degree, which is 0.35% lower than the national average of 14.55%. However, this county’s income per capita is about $51000, which exceeds the national average of $24000 by $27000. It turns out that this county is North Slope Borough of Alaska, home of the Prudhoe Bay Oil Field. Oil rigs workers make nearly $100,000 a year and many jobs do not require a college degree (Hargreaves). "),
+        p("According to the data, unless you are planning to work in an oil rig, having a higher level of education does in fact lead to a higher income. ")
+        # tableOutput("question_one_table")
       )
     )
   ),
-
-  tabPanel("Commute Times vs. Education",
+  tabPanel(
+    "Commute Times vs. Education",
     sidebarLayout(
       sidebarPanel(
         titlePanel("Select the State:"),
         selectInput("state_choice",
-                    label = "Select:",
-                    choices = state_list,
-                    selected = "National"
+          label = "Select:",
+          choices = state_list,
+          selected = "National"
         ),
         sliderInput("income_slider",
-                    label = "Income Range",
-                    min = income_range[1],
-                    max = income_range[2],
-                    value = income_range
+          label = "Income Range",
+          min = income_range[1],
+          max = income_range[2],
+          value = income_range
         )
       ),
       mainPanel(
@@ -85,38 +99,43 @@ ad5_ui <- navbarPage(
       )
     )
   ),
-  tabPanel("Race and College Access",
-           sidebarLayout(
-             sidebarPanel(
-               titlePanel("Select the State:"),
-               selectInput("state_q3",
-                           label = "Select:",
-                           choices = state_list,
-                           selected = "National"
-               ),
-               selectInput(inputId = "educ_level_q3",
-                           label = "Select Level of Education",
-                           choices = education_level_list,
-                           selected = "per_bachelors")
-
-             ),
-             mainPanel(
-               titlePanel("How does race makeup coorelate with education levels?"),
-               plotOutput("question_three_plot"),
-               p("Below are the education levels for the mean county in the selected area"),
-               tableOutput("question_three_table"),
-               p("According to our data, nationally at least, a high school education at least is a near-guarantee for those counties that are almost exclusivly white, where that is nowhere near the case for those counties with less primarily-white makeups. However, interestingly enough, the counties with the highest percentage of people with bachelors degrees or higher were in those counties with closer to 75-80% white populations, possibly suggesting that those places with higher levels of higher education are cities with more cosmopolitan makeups."),
-               p("Perhaps not suprisingly, but certianly unfortunatly, those places with the highest levels of high-school dropouts are the most non-white counties, although it is important to not that high levels of high-school dropouts are to be found in predominantly white counties as well.")
-             )
-           )
+  tabPanel(
+    "Race and College Access",
+    sidebarLayout(
+      sidebarPanel(
+        titlePanel("Select the State:"),
+        selectInput("state_q3",
+          label = "Select:",
+          choices = state_list,
+          selected = "National"
+        ),
+        selectInput(
+          inputId = "educ_level_q3",
+          label = "Select Level of Education",
+          choices = education_level_list,
+          selected = "per_bachelors"
+        )
+      ),
+      mainPanel(
+        titlePanel("How does race makeup coorelate with education levels?"),
+        plotOutput("question_three_plot"),
+        p("Below are the education levels for the mean county in the selected area"),
+        tableOutput("question_three_table"),
+        p("According to our data, nationally at least, a high school education at least is a near-guarantee for those counties that are almost exclusivly white, where that is nowhere near the case for those counties with less primarily-white makeups. However, interestingly enough, the counties with the highest percentage of people with bachelors degrees or higher were in those counties with closer to 75-80% white populations, possibly suggesting that those places with higher levels of higher education are cities with more cosmopolitan makeups."),
+        p("Perhaps not suprisingly, but certianly unfortunatly, those places with the highest levels of high-school dropouts are the most non-white counties, although it is important to not that high levels of high-school dropouts are to be found in predominantly white counties as well.")
+      )
+    )
   ),
   tabPanel("Question Four"),
-  tabPanel("References")
+  tabPanel(
+    "References",
+    p("Hargreaves, Steve. “Oil Rig Workers Make Nearly $100,000 a Year.” CNNMoney, Cable News Network, 10 May 2012, money.cnn.com/2012/05/10/news/economy/oil_workers/index.htm.")
+  )
 )
 
 # Server
 ad5_server <- function(input, output) {
-  #INTRODUCTION PAGE
+  # INTRODUCTION PAGE
   output$cover_image <- renderImage({
     return(list(src = "image/suzzallo.jpg", filetype = "image/jpeg", alt = "Suzzallo Library"))
   }, deleteFile = FALSE)
@@ -138,31 +157,60 @@ ad5_server <- function(input, output) {
 
 
 
-  #QUESTION ONE
+  # QUESTION ONE
   output$question_one_plot <- renderPlot({
-    if(input$state != "National") {
+    if (input$state != "National") {
       joined <- joined %>%
         filter(State == input$state)
     }
-
     education_income <- ggplot(data = joined) +
-      geom_hex(mapping = aes_string(x = education_level[[input$educ_level]], y = "IncomePerCap")) +
-      labs(title = paste("Prominence of", input$educ_level ,"and Income per Capita"), x = paste("% Population with", input$educ_level), y = "Income Per Capita")
+      geom_hex(
+        mapping = aes_string(
+          x = education_level[[input$educ_level]],
+          y = "IncomePerCap"
+        )
+      ) +
+      geom_smooth(
+        mapping = aes_string(
+          x = education_level[[input$educ_level]],
+          y = "IncomePerCap"
+        )
+      ) +
+      labs(
+        title = paste("Prominence of", input$educ_level, "and Income per Capita"),
+        x = paste("% Population with", input$educ_level),
+        y = "Income Per Capita"
+      )
     education_income
   })
   output$question_one_table <- renderTable({
-    if(input$state != "National") {
+    if (input$state != "National") {
       joined <- joined %>%
         filter(State == input$state)
     }
     income_table <- joined %>%
-      select(State, County,IncomePerCap, education_level[[input$educ_level]])
+      select(State, County, IncomePerCap, education_level[[input$educ_level]])
     income_table
+  })
+  output$question_one_msg <- renderText({
+    if (input$state != "National") {
+      joined <- joined %>%
+        filter(State == input$state)
+    }
+    joined <- joined %>%
+      select(State, County, IncomePerCap, education_level[[input$educ_level]])
+    q1_msg <- paste0(
+      "The correlation of this data is ", round(cor(joined[[education_level[[input$educ_level]]]], joined$IncomePerCap), digits = 2),
+      ", the average % ", input$educ_level, " is ", round(mean(joined[[education_level[[input$educ_level]]]]), digits = 2),
+      " and the average Income Per Capita is ", round(mean(joined$IncomePerCap), digits = 2), ". "
+    )
+
+    q1_msg
   })
 
   # QUESTION TWO
   output$question_two <- renderPlot({
-    if(input$state_choice == "National") {
+    if (input$state_choice == "National") {
       state_choice_df <- joined
     } else {
       state_choice_df <- filter(joined, State == input$state_choice)
@@ -176,7 +224,7 @@ ad5_server <- function(input, output) {
   })
 
   output$question_two_msg <- renderText({
-  q2_msg <- "The above scatter plot plots the county's data on the percent of the population with
+    q2_msg <- "The above scatter plot plots the county's data on the percent of the population with
             bachelors degrees or higher on the x-axis and the average commute time for the county's.
             The visualization defaults to display all of the counties but it can also plot specific states.
             The reason why this question is asked is because often times a measure of one's success is
@@ -204,10 +252,10 @@ ad5_server <- function(input, output) {
             significant correlation between higher percentage of bachelors degrees with higher incomes like the previous plot."
   })
 
-  #QUESTION THREE
+  # QUESTION THREE
 
   output$question_three_plot <- renderPlot({
-    if(input$state_q3 != "National") {
+    if (input$state_q3 != "National") {
       joined <- joined %>%
         filter(State == input$state_q3)
     }
@@ -220,24 +268,23 @@ ad5_server <- function(input, output) {
   })
 
   output$question_three_table <- renderTable({
-    if(input$state_q3 != "National") {
+    if (input$state_q3 != "National") {
       joined <- joined %>%
         filter(State == input$state_q3)
     }
 
     output <- summarise(joined,
-                        mean_less_than_high = mean(per_less_than_high),
-                        mean_high_only = mean(per_high_only),
-                        mean_some_college = mean(per_some_college),
-                        mean_bachelors = mean(per_bachelors))
+      mean_less_than_high = mean(per_less_than_high),
+      mean_high_only = mean(per_high_only),
+      mean_some_college = mean(per_some_college),
+      mean_bachelors = mean(per_bachelors)
+    )
 
 
     colnames(output) <- education_level_list <- c("Less than High School", "High School Only", "Some College", "Bachelors")
 
     output
   })
-
-
 }
 
 # Shiny App
