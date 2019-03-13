@@ -22,6 +22,8 @@ income_range <- range(joined$Income, na.rm = TRUE)
 education_level_list <- c("Less than High School", "High School Only", "Some College", "Bachelors")
 education_level <- list("Less than High School" = "per_less_than_high", "High School Only" = "per_high_only", "Some College" = "per_some_college", "Bachelors" = "per_bachelors")
 
+industries <- c("Professional", "Service", "Office", "Construction", "Production")
+
 
 # UI
 ad5_ui <- navbarPage(
@@ -84,10 +86,9 @@ ad5_ui <- navbarPage(
     "Commute Times vs. Education",
     sidebarLayout(
       sidebarPanel(
-        titlePanel("Select the State:"),
         # allows the user to narrow the data to a certain state
         selectInput("state_choice",
-          label = "Select:",
+          label = "Select State:",
           choices = state_list,
           selected = "National"
         ),
@@ -113,9 +114,8 @@ ad5_ui <- navbarPage(
   tabPanel("Race and College Access",
     sidebarLayout(
       sidebarPanel(
-        titlePanel("Select the State:"),
         selectInput("state_q3",
-                    label = "Select:",
+                    label = "Select State:",
                     choices = state_list,
                     selected = "National"
         ),
@@ -142,7 +142,35 @@ ad5_ui <- navbarPage(
   ),
 
   # Tab Panel for Question 4
-  tabPanel("Question Four")
+  tabPanel("Education Level vs. Industry Makeup",
+           sidebarLayout(
+             sidebarPanel(
+               selectInput("state_q4",
+                           label = "Select State:",
+                           choices = state_list,
+                           selected = "National"
+               ),
+               selectInput(inputId = "industry_q4",
+                           label = "Select Industry",
+                           choices = industries,
+                           selected = "Professional"),
+               selectInput(inputId = "educ_level_q4",
+                           label = "Select Level of Education",
+                           choices = education_level_list,
+                           selected = "per_bachelors")
+             ),
+             mainPanel(
+               titlePanel("How does level of education coorelate with industry makeup?"),
+               plotOutput("question_four_plot"),
+               p("Below is the industry makeup for the mean county in the selected area"),
+               tableOutput("question_four_table"),
+               p("Nationwide, those counties with higher education levels have a higher representation of professionals in their county makeup.
+                 Unsuprisingly, counties with a high percentage of college dropouts have much less representaion of professionals and higher representation of Service and construction."),
+               br(),
+               p("From these numbers, we can conclude that those places where a high percentage of residents work in higher-paying industries have higher rates of college education, suggesting that there is a correlation between high-paying industries and levels of education.")
+               )
+           )
+  )
 )
 
 
@@ -304,6 +332,36 @@ ad5_server <- function(input, output) {
   })
   
   # QUESTION FOUR
+  output$question_four_plot <- renderPlot({
+    if(input$state_q4 != "National") {
+      joined <- filter(joined, State == input$state_q4)
+    }
+    
+    industry_plot <- ggplot(data = joined) +
+      geom_point(mapping = aes_string(x = education_level[[input$educ_level_q4]], y = input$industry_q4), alpha = 0.3) +
+      labs(title = "Levels of Education vs. industry makeup", y = paste("Percentage of population who work in the", input$industry_q4, "industry"), x = paste("Percentage of County where Highest \nLevel of Education is", input$educ_level_q4))    
+    
+    industry_plot
+  })
+  
+  output$question_four_table <- renderTable({
+    if(input$state_q4 != "National") {
+      joined <- filter(joined, State == input$state_q4)
+    }
+    
+    output <- summarise(joined,
+                        mean_professional = mean(Professional),
+                        mean_service = mean(Service),
+                        mean_office = mean(Office),
+                        mean_construction = mean(Construction),
+                        mean_production = mean(Production)
+                        )
+    
+    colnames(output) <- industries
+    
+    output
+    
+  })
 }
 
 
