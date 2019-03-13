@@ -25,6 +25,7 @@ education_level <- list("Less than High School" = "per_less_than_high", "High Sc
 # UI
 ad5_ui <- navbarPage(
   "AD5 Final",
+  # Tab Panel for Introduction
   tabPanel("Introduction",
     titlePanel("Analyzing Education's Impact on Success"),
     imageOutput("cover_image"),
@@ -92,6 +93,8 @@ ad5_ui <- navbarPage(
       )
     )
   ),
+
+  # Tab Panel for Question 3
   tabPanel("Race and College Access",
            sidebarLayout(
              sidebarPanel(
@@ -117,11 +120,14 @@ ad5_ui <- navbarPage(
              )
            )
   ),
+
+  # Tab Panel for Question 4
   tabPanel("Question Four")
 )
 
 # Server
 ad5_server <- function(input, output) {
+  # INTRODUCTION
   # renders an image of Suzzallo Library of the University of Washington in introduction panel
   output$cover_image <- renderImage({
     return(list(src = "image/suzzallo.jpg", filetype = "image/jpeg", alt = "Suzzallo Library"))
@@ -164,6 +170,7 @@ ad5_server <- function(input, output) {
     income_table
   })
 
+  # QUESTION 2
   # renders a plot from the user input, a tool box that gives info to the user, and an analysis of the data for panel of Education vs Commute
   output$question_two <- renderPlot({
     if(input$state_choice == "National") {
@@ -221,39 +228,32 @@ ad5_server <- function(input, output) {
   })
 
   #QUESTION THREE
-
   output$question_three_plot <- renderPlot({
     if(input$state_q3 != "National") {
       joined <- joined %>%
         filter(State == input$state_q3)
     }
-
     race_plot <- ggplot(data = joined) +
       geom_hex(mapping = aes_string(x = "White", y = education_level[[input$educ_level_q3]])) +
       labs(title = "Levels of Education vs. Percentage of County That is White", x = "Percentage of County that is White", y = paste("Percentage of County where Highest \nLevel of Education is", input$educ_level_q3))
 
     race_plot
   })
-
   output$question_three_table <- renderTable({
     if(input$state_q3 != "National") {
       joined <- joined %>%
         filter(State == input$state_q3)
     }
-
     output <- summarise(joined,
                         mean_less_than_high = mean(per_less_than_high),
                         mean_high_only = mean(per_high_only),
                         mean_some_college = mean(per_some_college),
                         mean_bachelors = mean(per_bachelors))
-
-
     colnames(output) <- education_level_list <- c("Less than High School", "High School Only", "Some College", "Bachelors")
-
     output
   })
-
-
+  
+  # QUESTION FOUR
 }
 
 # Shiny App
