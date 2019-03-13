@@ -9,6 +9,7 @@ library("tidyr")
 library("rsconnect")
 library("tibble")
 
+
 # Data wrangling for entire report
 education_by_county <- read.csv("./data/education_by_county.csv", stringsAsFactors = FALSE) #dataframe containing education data
 census_county_data <- read.csv("./data/census_county_data.csv", stringsAsFactors = FALSE) #dataframe containing demographics
@@ -29,7 +30,7 @@ ad5_ui <- navbarPage(
   tabPanel("Introduction",
     titlePanel("Analyzing Education's Impact on Success"),
     imageOutput("cover_image"),
-    # line breaks so text does't cover image
+    # line breaks so text doesn't cover image
     br(),
     br(),
     br(),
@@ -96,34 +97,40 @@ ad5_ui <- navbarPage(
 
   # Tab Panel for Question 3
   tabPanel("Race and College Access",
-           sidebarLayout(
-             sidebarPanel(
-               titlePanel("Select the State:"),
-               selectInput("state_q3",
-                           label = "Select:",
-                           choices = state_list,
-                           selected = "National"
-               ),
-               selectInput(inputId = "educ_level_q3",
-                           label = "Select Level of Education",
-                           choices = education_level_list,
-                           selected = "per_bachelors")
-
-             ),
-             mainPanel(
-               titlePanel("How does race makeup coorelate with education levels?"),
-               plotOutput("question_three_plot"),
-               p("Below are the education levels for the mean county in the selected area"),
-               tableOutput("question_three_table"),
-               p("According to our data, nationally at least, a high school education at least is a near-guarantee for those counties that are almost exclusivly white, where that is nowhere near the case for those counties with less primarily-white makeups. However, interestingly enough, the counties with the highest percentage of people with bachelors degrees or higher were in those counties with closer to 75-80% white populations, possibly suggesting that those places with higher levels of higher education are cities with more cosmopolitan makeups."),
-               p("Perhaps not suprisingly, but certianly unfortunatly, those places with the highest levels of high-school dropouts are the most non-white counties, although it is important to not that high levels of high-school dropouts are to be found in predominantly white counties as well.")
-             )
-           )
+    sidebarLayout(
+      sidebarPanel(
+        titlePanel("Select the State:"),
+        selectInput("state_q3",
+                    label = "Select:",
+                    choices = state_list,
+                    selected = "National"
+        ),
+        selectInput(inputId = "educ_level_q3",
+                    label = "Select Level of Education",
+                    choices = education_level_list,
+                    selected = "per_bachelors")
+        ),
+      mainPanel(
+       titlePanel("How does race makeup coorelate with education levels?"),
+       plotOutput("question_three_plot"),
+       p("Below are the education levels for the mean county in the selected area"),
+       tableOutput("question_three_table"),
+       p("According to our data, nationally at least, a high school education at least is a near-guarantee for 
+        those counties that are almost exclusivly white, where that is nowhere near the case for those counties with 
+        less primarily-white makeups. However, interestingly enough, the counties with the highest percentage of 
+        people with bachelors degrees or higher were in those counties with closer to 75-80% white populations, possibly 
+        suggesting that those places with higher levels of higher education are cities with more cosmopolitan makeups."),
+       p("Perhaps not suprisingly, but certianly unfortunatly, those places with the highest levels of high-school dropouts 
+        are the most non-white counties, although it is important to not that high levels of high-school dropouts are to be 
+        found in predominantly white counties as well.")
+       )
+     )
   ),
 
   # Tab Panel for Question 4
   tabPanel("Question Four")
 )
+
 
 # Server
 ad5_server <- function(input, output) {
@@ -255,6 +262,7 @@ ad5_server <- function(input, output) {
   
   # QUESTION FOUR
 }
+
 
 # Shiny App
 shinyApp(ui = ad5_ui, server = ad5_server)
