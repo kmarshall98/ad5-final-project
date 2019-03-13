@@ -8,6 +8,7 @@ library("ggplot2")
 library("tidyr")
 library("rsconnect")
 library("tibble")
+library("hexbin")
 
 
 # Data wrangling for entire report
